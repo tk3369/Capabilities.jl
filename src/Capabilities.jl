@@ -7,7 +7,7 @@ export @cap, @defcap
 # This global variable maintains a stack of capabilities. It grows whenever
 # a capability-constrained function is called.
 # TODO: use task local storage to support async or multi-threaded apps
-const CAP_STACK = [Any]
+const CAP_STACK = Any[Any]
 
 abstract type Capability end
 
@@ -102,4 +102,4 @@ macro defcap(name)
     end
 end
 
-end
+end #module

@@ -1,9 +1,10 @@
 using Capabilities: Capabilities, @defcap, @cap, IncapableError
+using Capabilities: _Cap_io, _Cap_rand
 using Test
 
 @defcap secret
-@defcap rand
-@defcap io
+# @defcap rand
+# @defcap io
 
 @testset "Capabilities.jl" begin
 
