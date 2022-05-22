@@ -22,11 +22,6 @@ end
 
 _cap_type_symbol(x::Symbol) = Symbol("_Cap_$x")
 
-function _resolve_cap_type(m::Module, x::Symbol)
-    # @info "Resolving" m x
-    @eval(m, $(_cap_type_symbol(x)))
-end
-
 """
     @cap [CapName1, CapName2, ...] <function-def>
 
@@ -90,12 +85,15 @@ macro defcap(ex)
     end
     if ex isa Symbol
         name = ex
-        parent = Expr(:(.), :Capabilities, QuoteNode(:_Cap_Capability))
+        parent_module_sym = :Capabilities
+        parent_cap_sym = :Capability
     else
         name = ex.args[1]
-        parent = _resolve_cap_type(__module__, ex.args[2])
+        parent_module_sym = Symbol(__module__)
+        parent_cap_sym = ex.args[2]
     end
     cap_name = _cap_type_symbol(name)
+    parent = Expr(:(.), parent_module_sym, QuoteNode(_cap_type_symbol(parent_cap_sym)))
     return esc(quote
         abstract type $cap_name <: $parent end
     end)
