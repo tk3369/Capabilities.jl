@@ -90,13 +90,12 @@ macro defcap(ex)
     end
     if ex isa Symbol
         name = ex
-        parent = :Capability
+        parent = Expr(:(.), :Capabilities, QuoteNode(:_Cap_Capability))
     else
         name = ex.args[1]
-        parent = ex.args[2]
+        parent = _resolve_cap_type(__module__, ex.args[2])
     end
     cap_name = _cap_type_symbol(name)
-    parent = _resolve_cap_type(__module__, parent)
     return esc(quote
         abstract type $cap_name <: $parent end
     end)
