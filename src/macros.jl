@@ -1,29 +1,5 @@
-# To run the capability-constrained function, make sure that its specified
-# capabilities is a subtype of the current capabilities. Always throw exception
-# when the check failed. Returns nothing.
-function _check_cap(func::Symbol, capabilities::Type)
-    if !isempty(CAP_STACK)
-        T = last(CAP_STACK)
-        S = capabilities
-        S <: T || throw(IncapableError("$func missing capability: $S not a subtype of $T"))
-    end
-end
-
-# Make sure that `capabilities` becomes the current capabilities.
-# Then, execute the function.
-function _run(f::Function, capabilities::Type)
-    try
-        push!(CAP_STACK, capabilities)
-        f()
-    finally
-        pop!(CAP_STACK)
-    end
-end
-
-_cap_type_symbol(x::Symbol) = Symbol("_Cap_$x")
-
 """
-    @cap [CapName1, CapName2, ...] <function-def>
+    @cap [<CapName1>, <CapName2>, ...] <function-def>
 
 Declare a function such that it requires the specified capabilities in the
 list.
@@ -122,9 +98,43 @@ Expr
           args: Array{Any}((1,))
             1: Symbol baz
 =#
+"""
+    @importcap <Module> [<CapName1>, <CapName2>...]
+
+Import capability types from a module.
+
+# Example
+```
+@importcap Capabilities [rand, io]
+```
+"""
 macro importcap(mod, names)
     names = _cap_type_symbol.(names.args)
     args = Any[Expr(:(.), name) for name in names]
     pushfirst!(args, Expr(:(.), mod))
     return Expr(:using, Expr(:(:), args...))
 end
+
+# To run the capability-constrained function, make sure that its specified
+# capabilities is a subtype of the current capabilities. Always throw exception
+# when the check failed. Returns nothing.
+function _check_cap(func::Symbol, capabilities::Type)
+    if !isempty(CAP_STACK)
+        T = last(CAP_STACK)
+        S = capabilities
+        S <: T || throw(IncapableError("$func missing capability: $S not a subtype of $T"))
+    end
+end
+
+# Make sure that `capabilities` becomes the current capabilities.
+# Then, execute the function.
+function _run(f::Function, capabilities::Type)
+    try
+        push!(CAP_STACK, capabilities)
+        f()
+    finally
+        pop!(CAP_STACK)
+    end
+end
+
+_cap_type_symbol(x::Symbol) = Symbol("_Cap_$x")
