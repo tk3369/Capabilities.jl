@@ -3,7 +3,7 @@ using Test
 
 @importcap Capabilities [rand, io]
 @defcap secret
-@defcap super_secret secret
+@defcap super_secret <: secret
 
 @testset "Capabilities.jl" begin
 

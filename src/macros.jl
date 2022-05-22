@@ -84,12 +84,19 @@ macro to define functions that refer to the same capability.
 @defcap secret
 ```
 """
-macro defcap(name, parent=Capabilities.Capability)
-    name isa Symbol || error("Syntax error: @defcap <name>")
-    cap_name = _cap_type_symbol(name)
-    if parent isa Symbol
-        parent = _resolve_cap_type(__module__, parent)
+macro defcap(ex)
+    if !(ex isa Symbol || (ex isa Expr && ex.head == :(<:)))
+        error("Syntax error: @defcap [CapName], or @defcap [CapName] <: [ParentCapName]")
     end
+    if ex isa Symbol
+        name = ex
+        parent = :Capability
+    else
+        name = ex.args[1]
+        parent = ex.args[2]
+    end
+    cap_name = _cap_type_symbol(name)
+    parent = _resolve_cap_type(__module__, parent)
     return esc(quote
         abstract type $cap_name <: $parent end
     end)

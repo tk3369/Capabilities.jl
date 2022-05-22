@@ -1,6 +1,6 @@
 module Capabilities
 
-export Capabilities
+export Capabilities, _Cap_Capability
 export @cap, @defcap, @importcap
 export IncapableError
 
