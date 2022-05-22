@@ -1,10 +1,8 @@
-using Capabilities: Capabilities, @defcap, @cap, IncapableError
-using Capabilities: _Cap_io, _Cap_rand
+using Capabilities: Capabilities, @defcap, @cap, @importcap, IncapableError
 using Test
 
+@importcap Capabilities [rand, io]
 @defcap secret
-# @defcap rand
-# @defcap io
 
 @testset "Capabilities.jl" begin
 
@@ -12,6 +10,10 @@ using Test
         @cap [rand, io] foo() = bar()
         @cap [rand] bar() = rand()
         @test_nowarn foo()  # foo has more capabilities
+
+        # anon function
+        lambda = @cap([rand, io], () -> rand())
+        @test_nowarn lambda()
     end
 
     @testset "Negative tests" begin
