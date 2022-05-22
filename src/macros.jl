@@ -62,7 +62,7 @@ macro defcap(ex)
     if ex isa Symbol
         name = ex
         parent_module_sym = :Capabilities
-        parent_cap_sym = :Capability
+        parent_cap_sym = :defaults
     else
         name = ex.args[1]
         parent_module_sym = Symbol(__module__)
