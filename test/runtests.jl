@@ -1,4 +1,4 @@
-using Capabilities: Capabilities, @defcap, @cap, @importcap, IncapableError
+using Capabilities
 using Test
 
 @importcap Capabilities [rand, io]

@@ -1,8 +1,10 @@
 module Capabilities
 
-using ExprTools
-
+export Capabilities
 export @cap, @defcap, @importcap
+export IncapableError
+
+using ExprTools
 
 # This global variable maintains a stack of capabilities. It grows whenever
 # a capability-constrained function is called.
