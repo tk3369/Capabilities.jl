@@ -5,3 +5,6 @@
 # Capabilities
 
 This is an experimental package that allows one to declare capabilities for functions.
+
+Some diagrams
+https://excalidraw.com/#room=b87c9504db957a6daa32,5eN5TXo2vQRfk3hOo8sLMw
