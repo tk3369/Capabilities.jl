@@ -6,7 +6,7 @@ Privacy can be respected when data is restricted from being read/written.
 For example, a function without `io_write` is safe to call without worrying
 about user data being leaked to a database used for unintended purposes.
 Likewise, a function without `io_read` is safe to call without worrying
-that it might have injested data from a sensitive data store.
+that it might have ingested data from a sensitive data store.
 
 I can imagine that someone defines sub-capability types further, for example:
 ```
